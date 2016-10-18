@@ -1,0 +1,51 @@
+platform:
+    command_first: /bin/sh
+    command_second : -c
+    command_third  : plucron-server
+    command_kill   : kill
+    command_pgrep  : ps aux|pgrep plucron-server
+
+    #kafka
+    kafka_topic                       : cron
+    kafka_addrs                        : 172.16.9.4:9092
+    kafka_chroot                       :  
+    kafka_zkaddrs                      : 172.16.9.4:2181
+    kafka_group_name                   : go
+    offsets_commit_interval            : 10
+    offsets_processing_timeout_seconds : 10
+
+    #database master
+    db_alias_m       : default
+    db_driver_m      : mysql
+    #db_username_m    : root
+    #db_password_m    : PluMy_123
+    #db_server_m      : 172.16.9.230
+    #db_port_m        : 3306
+    #db_name_m        : cron
+    #db_charset_m     : utf8
+    db_maxidle_m     : 30
+    db_debug         : true
+    db_singulartable : true
+    db_logmode       : true
+    #db_username_m + : + db_password_m + @tcp( + db_server_m + : + db_port_m + )/ + db_name_m + ?charset: + db_charset_m + &parsetime:true&loc:local
+    db_setting       : root:PluMy_123@tcp/(172.16.9.230:3306)/cron?charset:utf8&parsetime:true&loc:local
+
+    #process status
+    processing : 运行中
+    stop       : 已停止
+
+    #定时检查进程时间
+    check_time : 3
+
+    #log path
+    log_path : logs/
+
+    #mongodb
+    mgo_db_name : cron
+    mongodb     : mongodb://172.16.9.221:27017
+
+    #url
+    base_url : http://test.base.plu.cn/
+
+    #alarm
+    alarm_mobile : 18051232516,13564060333
