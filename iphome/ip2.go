@@ -12,7 +12,7 @@ func init() {
 }
 
 func main() {
-	ips := []string{"115.231.106.232"}
+	ips := []string{"115.231.106.232", "119.75.218.70"}
 	res, _ := ipquery.Query(ips)
 	result, _ := json.Marshal(res)
 	fmt.Println(string(result))
