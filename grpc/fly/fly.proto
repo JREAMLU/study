@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.routeguide";
+option java_outer_classname = "RouteGuideProto";
+
+package fly;
+
+service FlyToSky {
+    rpc DriverPlane(FlyRequest) returns (FlyReply) {}
+}
+
+message FlyRequest {
+    string version = 1;
+}
+
+message FlyReply {
+    string name = 1;
+}
