@@ -2,13 +2,13 @@ package gpool
 
 import (
 	"runtime"
-	"test/goroutine"
 	"testing"
 	"time"
 )
 
 func Test_Example(t *testing.T) {
-	pool := gpool.New(100)
+	// pool := gpool.New(100)
+	pool := New(100)
 	println(runtime.NumGoroutine())
 	for i := 0; i < 1000; i++ {
 		pool.Add(1)

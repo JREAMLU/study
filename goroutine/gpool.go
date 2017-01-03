@@ -1,8 +1,6 @@
 package gpool
 
-import (
-	"sync"
-)
+import "sync"
 
 type pool struct {
 	queue chan int
