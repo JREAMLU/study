@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "ydWDJOelU4Nza9IlDn/nZGv4NIc=",
+			"path": "github.com/wangtuanjie/ip17mon",
+			"revision": "2ec52112bc639f72d2e658930433c3bf8b783219",
+			"revisionTime": "2016-07-23T05:02:35Z"
+		}
+	],
+	"rootPath": "github.com/JREAMLU/study/queryip"
+}

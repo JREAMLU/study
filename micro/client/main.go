@@ -56,6 +56,7 @@ func main() {
 	resp, err := hello()
 	if err != nil {
 		log.Println(err)
+		return
 	}
 	log.Println("result: ", resp.Nickname)
 }
@@ -80,7 +81,6 @@ func hello() (*proto.HelloResponse, error) {
 	err := client.Call(context.TODO(), req, resp)
 
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
