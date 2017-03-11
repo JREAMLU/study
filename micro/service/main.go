@@ -7,6 +7,7 @@ import (
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-os/trace"
 	_ "github.com/micro/go-plugins/broker/kafka"
+	"github.com/micro/go-plugins/trace/zipkin"
 
 	"github.com/JREAMLU/study/micro/service/proto"
 	grpc "github.com/micro/go-grpc"
@@ -46,9 +47,14 @@ func main() {
 
 func Trace(serviceNmae, version string) micro.Option {
 	return func(opt *micro.Options) {
-		t := trace.NewTrace(trace.Client(opt.Client))
+		t := zipkin.NewTrace(trace.Client(opt.Client), trace.Collectors("172.16.9.4:9092"))
 		srv := &registry.Service{Name: serviceNmae, Version: version}
 		micro.WrapClient(trace.ClientWrapper(t, srv))(opt)
 		micro.WrapHandler(trace.HandlerWrapper(t, srv))(opt)
+
+		// t := trace.NewTrace(trace.Client(opt.Client))
+		// srv := &registry.Service{Name: serviceNmae, Version: version}
+		// micro.WrapClient(trace.ClientWrapper(t, srv))(opt)
+		// micro.WrapHandler(trace.HandlerWrapper(t, srv))(opt)
 	}
 }
