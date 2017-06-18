@@ -10,7 +10,7 @@ var wg sync.WaitGroup
 
 // var taskChannel chan int
 var taskChannel = make(chan int, 100)
-var total = 10
+var total = 100
 
 func main() {
 	// serverV1()
@@ -20,10 +20,10 @@ func main() {
 func serverV1() {
 	s := time.Now().UnixNano()
 	for i := 0; i < total; i++ {
-		wg.Add(1)
+		// wg.Add(1)
 		go processV1(i)
 	}
-	wg.Wait()
+	// wg.Wait()
 	e := time.Now().UnixNano()
 	tt := e - s
 	log.Printf("%d us", tt)
@@ -31,7 +31,8 @@ func serverV1() {
 
 func processV1(task int) int {
 	d := task + 1
-	wg.Done()
+	// log.Println(d)
+	// wg.Done()
 	return d
 }
 

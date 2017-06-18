@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	fmt.Println(123)
 	client, err := NewClient()
 	if err != nil {
 		panic(err)

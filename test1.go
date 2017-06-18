@@ -1,60 +1,38 @@
-package main2
+package main
 
 import (
 	"fmt"
-	"os/exec"
 )
 
-func run() {
-	cmd := exec.Command("cmd", "/C", "ping 127.0.0.1 > test.txt")
-	err := cmd.Start()
-	if err != nil {
-		fmt.Println("exec failed")
-	}
-	/*
-		stdout, err := cmd.StdoutPipe()
-		if err != nil {
-			fmt.Println("StdoutPipe: " + err.Error())
-			return
-		}
-
-		stderr, err := cmd.StderrPipe()
-		if err != nil {
-			fmt.Println("StderrPipe: ", err.Error())
-			return
-		}
-
-		if err := cmd.Start(); err != nil {
-			fmt.Println("Start: ", err.Error())
-			return
-		}
-
-		bytesErr, err := ioutil.ReadAll(stderr)
-		if err != nil {
-			fmt.Println("ReadAll stderr: ", err.Error())
-			return
-		}
-
-		if len(bytesErr) != 0 {
-			fmt.Printf("stderr is not nil: %s", bytesErr)
-			return
-		}
-
-		bytes, err := ioutil.ReadAll(stdout)
-		if err != nil {
-			fmt.Println("ReadAll stdout: ", err.Error())
-			return
-		}
-
-		if err := cmd.Wait(); err != nil {
-			fmt.Println("Wait: ", err.Error())
-			return
-		}
-
-		fmt.Printf("stdout: %s", bytes)
-	*/
-}
+var Chunk = 5
 
 func main() {
-	run()
+	rid := []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"}
+	rids := SliceChunkString(rid, Chunk)
+	fmt.Println(len(rids))
+	for _, registrationID := range rids {
+		fmt.Println(len(registrationID))
+		fmt.Println(registrationID)
+	}
+}
+
+func SliceChunkString(slice []string, size int) (chunkslice [][]string) {
+	size1 := len(slice) / size
+	if size == 0 || len(slice)%size > 0 {
+		size1++
+	}
+
+	chunkSize := (len(slice) + size1 - 1) / size1
+
+	for i := 0; i < len(slice); i += chunkSize {
+		end := i + chunkSize
+
+		if end > len(slice) {
+			end = len(slice)
+		}
+
+		chunkslice = append(chunkslice, slice[i:end])
+	}
+
+	return chunkslice
 }
