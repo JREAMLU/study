@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -15,6 +16,8 @@ var upgrader = websocket.Upgrader{
 
 func echo(w http.ResponseWriter, r *http.Request) {
 	c, err := upgrader.Upgrade(w, r, nil)
+	fmt.Println("++++++++++++: ", c.LocalAddr())
+	fmt.Println("++++++++++++: ", c.RemoteAddr())
 	if err != nil {
 		log.Print("upgrade:", err)
 		return
