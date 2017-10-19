@@ -16,8 +16,8 @@ import (
 )
 
 func main() {
-	go ListenRoom("6666")
-	ListenRoom("599532")
+	// go ListenRoom("6666")
+	ListenRoom("310983")
 }
 
 var (
@@ -86,7 +86,6 @@ func (p *Panda) init(flag int, chatAddrListIndex int) error {
 		return err
 	}
 
-	fmt.Println("++++++++++++: ", param.ChatAddrList, param.ChatAddrList[0])
 	for _, addrs := range param.ChatAddrList {
 		ChatAddrList = append(ChatAddrList, addrs)
 	}
@@ -102,6 +101,8 @@ func (p *Panda) init(flag int, chatAddrListIndex int) error {
 	case 1:
 		adList = ChatAddrList[chatAddrListIndex]
 	}
+
+	log.Printf("ChatAddrList列表: %v, 当前连接地址: %v", ChatAddrList, adList)
 
 	// flag = 0 默认取、flag = 1
 	conn, err := net.Dial("tcp", adList)
@@ -168,10 +169,12 @@ Retry:
 	tryTimes++
 
 	p.keepAlive()
+
 	b := make([]byte, 512*1024)
 	start := 0
 	end := 0
 	lastOffset := 0
+
 	for !p.exit {
 		start = 0
 		end = 0
@@ -181,6 +184,8 @@ Retry:
 			p.Close()
 			// 计数
 			if tryTimes <= 10 {
+				time.Sleep(time.Second * 4)
+				log.Printf("房间 %v 尝试重试，当前重试次数: %v", p.room, tryTimes)
 				goto Retry
 			}
 			str := "EOF"
@@ -262,14 +267,14 @@ func (p *Panda) keepAlive() {
 	go func() {
 		for {
 			i, err := p.conn.Write(pandaHeartbeat)
-			log.Printf("%v-房间 发送心跳 周期 %v, i: %v, err: %v", p.room, KeepAliveInterval, i, err)
 			if err != nil {
+				log.Printf("%v-房间 退出心跳 周期 %v, err: %v", p.room, KeepAliveInterval, err)
 				return
 			}
+			log.Printf("%v-房间 发送心跳 周期 %v, i: %v, err: %v", p.room, KeepAliveInterval, i, err)
 			time.Sleep(KeepAliveInterval)
 		}
 	}()
-
 }
 
 func (p *Panda) IsLive() (bool, error) {
@@ -352,7 +357,6 @@ func GetJson(url string, v interface{}) error {
 }
 
 func (p *Panda) Close() {
-	p.exit = true
 	p.conn.Close()
 }
 
