@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/binary"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -19,7 +20,7 @@ var wsConn *websocket.Conn
 
 func main() {
 	// 获取房间信息
-	param, err := getChatParam(20641)
+	param, err := getChatParam(1109691)
 	if err != nil {
 		return
 	}
@@ -62,7 +63,14 @@ func main() {
 			log.Println("read:", err)
 			return
 		}
-		log.Printf("recv: %s", message)
+
+		msg, err := dealMessage(message)
+		if err != nil {
+			log.Printf("recv err: %s", msg, err)
+			return
+		}
+
+		log.Printf("recv: %s", msg, err)
 	}
 }
 
@@ -71,6 +79,9 @@ var pandaHeartbeat = []byte{0x00, 0x06, 0x00, 0x00}
 var pandaResponse = []byte{0x00, 0x06, 0x00, 0x06} //连接弹幕服务器响应
 var pandaReceiveMsg = []byte{0x00, 0x06, 0x00, 0x03}
 var pandaHeartbeatResponse = []byte{0x00, 0x06, 0x00, 0x01}
+
+const pandaIgnoreByteLength = 12 //弹幕消息体忽略的字节数
+const pandaMetaByteLength = 4    //meta
 
 type PandaChatParam struct {
 	Rid          int64    `json:"rid"`
@@ -138,7 +149,7 @@ func handshake(param *PandaChatParam) error {
 	if err != nil {
 		return err
 	}
-	if n != 2 || !bytes.Equal(buff[:4], pandaResponse) {
+	if n != websocket.BinaryMessage || !bytes.Equal(buff[:4], pandaResponse) {
 		return errors.New("response error")
 	}
 	log.Printf("第一次读取信息成功: %v", buff[:4])
@@ -148,9 +159,66 @@ func handshake(param *PandaChatParam) error {
 		return errors.New("invalid response length flag")
 	}
 	n, buff2, err := wsConn.ReadMessage()
-	if n == 2 || bytes.Equal(buff2[:4], pandaReceiveMsg) {
-		log.Printf("第二次读取服务器成功, 开始接收弹幕消息: %v", buff2[:4])
+	if len(buff2) == 0 {
+		return errors.New("invalid response recv")
+	}
+	if n == websocket.BinaryMessage || bytes.Equal(buff2[:4], pandaReceiveMsg) {
+		log.Printf("第二次读取服务器成功, 开始接收弹幕消息: %v %v", buff2[:4], buff2)
 	}
 
 	return nil
+}
+
+var typeStart = []byte(`{"type"`)
+
+func dealMessage(buff []byte) (string, error) {
+	l := len(buff)
+	if l <= 4 {
+		return "", errors.New("no deal")
+	}
+
+	if bytes.Equal(buff[:4], pandaReceiveMsg) {
+		if l < 4+2 {
+			return "", errors.New("msg length + body not enough")
+		}
+
+		length := uint(buff[4]<<8) + uint(buff[5])
+		pos := int(4 + 2 + length)
+		if l < pos+4+pandaIgnoreByteLength {
+			return "", errors.New("l < pos+4+pandaIgnoreByteLength")
+		}
+
+		msgLen := int(binary.BigEndian.Uint32(buff[pos:]))
+		if l < pos+4+msgLen {
+			return "", errors.New("l < pos+4+msgLen")
+		}
+		pos += 4 + pandaIgnoreByteLength
+		strBytes := buff[pos : pos+msgLen-pandaIgnoreByteLength]
+
+		// 弹幕有时有bug，多条消息并在一起，需要拆开
+		var n = 0
+		for {
+			n = bytes.LastIndex(strBytes, typeStart)
+			if n == -1 {
+				// for ugly string like
+				// {"data":{"content":{"val":5819.173616,"c_lv":14,"c_lv_val":5180,"n_lv":15,"n_lv_val":6449},"to":{"toRoom":"66666"},"from":{}},"type":"212"}
+				n = bytes.LastIndex(strBytes, []byte(`{"data"`))
+				if n == -1 {
+					fmt.Println("invalid string", string(strBytes))
+					break
+				}
+			}
+			str := string(strBytes[n:])
+			return str, nil
+			if n == 0 {
+				break
+			}
+			strBytes = strBytes[:n-pandaIgnoreByteLength]
+		}
+
+	} else if bytes.Equal(buff[:4], pandaHeartbeatResponse) {
+		return "", errors.New("heartbeat")
+	}
+
+	return "", errors.New(hex.EncodeToString(buff[:4]))
 }
