@@ -19,8 +19,10 @@ import (
 var wsConn *websocket.Conn
 
 func main() {
+	var roomid int64 = 1109691
+
 	// 获取房间信息
-	param, err := getChatParam(1109691)
+	param, err := getChatParam(roomid)
 	if err != nil {
 		return
 	}
@@ -56,6 +58,7 @@ func main() {
 	handshake(param)
 
 	// keepAlive
+	keepAlive(roomid)
 
 	for {
 		_, message, err := wsConn.ReadMessage()
@@ -79,6 +82,8 @@ var pandaHeartbeat = []byte{0x00, 0x06, 0x00, 0x00}
 var pandaResponse = []byte{0x00, 0x06, 0x00, 0x06} //连接弹幕服务器响应
 var pandaReceiveMsg = []byte{0x00, 0x06, 0x00, 0x03}
 var pandaHeartbeatResponse = []byte{0x00, 0x06, 0x00, 0x01}
+
+var KeepAliveInterval = time.Minute
 
 const pandaIgnoreByteLength = 12 //弹幕消息体忽略的字节数
 const pandaMetaByteLength = 4    //meta
@@ -172,8 +177,13 @@ func handshake(param *PandaChatParam) error {
 var typeStart = []byte(`{"type"`)
 
 func dealMessage(buff []byte) (string, error) {
+	if bytes.Equal(buff[:4], pandaHeartbeatResponse) {
+		return "", nil
+	}
+
 	l := len(buff)
 	if l <= 4 {
+		fmt.Println("++++++++++++: ", buff)
 		return "", errors.New("no deal")
 	}
 
@@ -217,8 +227,23 @@ func dealMessage(buff []byte) (string, error) {
 		}
 
 	} else if bytes.Equal(buff[:4], pandaHeartbeatResponse) {
-		return "", errors.New("heartbeat")
+		return "", nil
 	}
 
-	return "", errors.New(hex.EncodeToString(buff[:4]))
+	log.Printf("%v", hex.EncodeToString(buff[:4]))
+	return "", nil
+}
+
+func keepAlive(roomid int64) {
+	go func() {
+		for {
+			err := wsConn.WriteMessage(websocket.BinaryMessage, pandaHeartbeat)
+			if err != nil {
+				log.Printf("%v-房间 退出心跳 周期 %v, err: %v", roomid, KeepAliveInterval, err)
+				return
+			}
+			log.Printf("%v-房间 发送心跳 周期 %v, err: %v", roomid, KeepAliveInterval, err)
+			time.Sleep(KeepAliveInterval)
+		}
+	}()
 }
