@@ -18,7 +18,13 @@ import (
 var wsConn *websocket.Conn
 
 func main() {
-	websocketAddr := "riveng36-sht.gw.riven.panda.tv:8080"
+	// 获取房间信息
+	param, err := getChatParam(20641)
+	if err != nil {
+		return
+	}
+
+	websocketAddr := param.ChatAddrList[0]
 	u := url.URL{Scheme: "wss", Host: websocketAddr, Path: "/"}
 
 	origin := "https://www.panda.tv"
@@ -34,23 +40,16 @@ func main() {
 		Proxy: http.ProxyFromEnvironment,
 	}
 
-	var err error
 	wsConn, _, err = wd.Dial(u.String(), wsHeaders)
 	if err != nil {
 		log.Fatal("-dial:", err)
 	}
+	log.Printf("连接服务器成功, ws地址列表: %v, 当前使用的地址: %v", param.ChatAddrList, websocketAddr)
 
 	defer func() {
 		wsConn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "88"))
 		wsConn.Close()
 	}()
-
-	// 获取房间信息
-	param, err := getChatParam(20641)
-	if err != nil {
-		return
-	}
-	fmt.Println("++++++++++++: ", param)
 
 	// handshake
 	handshake(param)
@@ -87,20 +86,14 @@ type pandaChatData struct {
 }
 
 func getChatParam(roomid int64) (*PandaChatParam, error) {
-	u1 := fmt.Sprintf("http://riven.panda.tv/chatroom/getinfo?roomid=%d", roomid)
+	u := fmt.Sprintf("http://riven.panda.tv/chatroom/getinfo?roomid=%d&protocol=ws", roomid)
 	var chatData pandaChatData
-	err := GetJson(u1, &chatData)
+	err := GetJson(u, &chatData)
 	if err != nil {
 		return nil, err
 	}
-	u2 := fmt.Sprintf("http://api.homer.panda.tv/chatroom/getinfo?rid=%d&roomid=%d&retry=0&sign=%s&ts=%d&_=%d",
-		chatData.Data.Rid, roomid, chatData.Data.Sign, chatData.Data.Ts, time.Now().Unix()*1000)
-	var chatData2 pandaChatData
-	err = GetJson(u2, &chatData2)
-	if err != nil {
-		return nil, err
-	}
-	return &chatData2.Data, nil
+
+	return &chatData.Data, nil
 }
 
 func GetJson(url string, v interface{}) error {
@@ -136,9 +129,7 @@ func handshake(param *PandaChatParam) error {
 	msg := make([]byte, 4+2+l)
 	copy(msg, pandaStart)
 	binary.BigEndian.PutUint16(msg[4:], uint16(l))
-	// copy(msg[4:], []byte{byte(l >> 8), byte(l & 0xff)})
 	copy(msg[4+2:], []byte(data))
-	// err := wsConn.WriteMessage(websocket.BinaryMessage, msg)
 	err := wsConn.WriteMessage(websocket.BinaryMessage, msg)
 	if err != nil {
 		return err
@@ -150,6 +141,7 @@ func handshake(param *PandaChatParam) error {
 	if n != 2 || !bytes.Equal(buff[:4], pandaResponse) {
 		return errors.New("response error")
 	}
+	log.Printf("第一次读取信息成功: %v", buff[:4])
 
 	length := int((uint(buff[4]) << 8) + uint(buff[5]))
 	if length > 255 {
@@ -157,7 +149,7 @@ func handshake(param *PandaChatParam) error {
 	}
 	n, buff2, err := wsConn.ReadMessage()
 	if n == 2 || bytes.Equal(buff2[:4], pandaReceiveMsg) {
-		log.Printf("开始接收弹幕消息: %v", pandaReceiveMsg)
+		log.Printf("第二次读取服务器成功, 开始接收弹幕消息: %v", buff2[:4])
 	}
 
 	return nil
