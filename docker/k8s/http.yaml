@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: docker-http
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:  ##由于replicas为3,则整个升级,pod个数在2-4个之间
+      maxSurge: 1      #滚动升级时会先启动1个pod
+      maxUnavailable: 1 #滚动升级时允许的最大Unavailable的pod个数
+  selector:
+    matchLabels:
+      app: docker-http
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: docker-http
+        version: v0.0.1
+    spec:
+      imagePullSecrets:
+        - name: vmhubsecret
+      containers:
+      - name: docker-http
+        image: 10.200.202.77:8881/micro/docker-http:v0.0.1
+        imagePullPolicy: Always
+        command:
+          - /docker-http
