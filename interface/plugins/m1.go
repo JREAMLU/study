@@ -18,18 +18,19 @@ func (m *m1Magic) Init(opts ...server.Option) error {
 	return nil
 }
 
-func (m *m1Magic) Start() (string, error) {
-	return m.name, nil
+func (m *m1Magic) Start(name string) (string, error) {
+	return name, nil
 }
 
-func (m *m1Magic) Close() (string, error) {
-	return m.name, nil
+func (m *m1Magic) Close(name string) (string, error) {
+	return name, nil
 }
 
 func (m *m1Magic) Options() server.Options {
 	return m.opts
 }
 
+// NewMagic new magic
 func NewMagic(opts ...server.Option) server.Magic {
 	options := server.Options{}
 	for _, o := range opts {
@@ -37,8 +38,6 @@ func NewMagic(opts ...server.Option) server.Magic {
 	}
 
 	return &m1Magic{
-		name:  "m1",
-		level: "1",
-		opts:  options,
+		opts: options,
 	}
 }
