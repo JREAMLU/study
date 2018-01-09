@@ -1,6 +1,10 @@
-package plugins
+package p1
 
-import "github.com/JREAMLU/study/interface/server"
+import (
+	"fmt"
+
+	"github.com/JREAMLU/study/interface/server"
+)
 
 type m1Magic struct {
 	name  string
@@ -9,6 +13,7 @@ type m1Magic struct {
 }
 
 func init() {
+	server.MG = NewMagic()
 }
 
 func (m *m1Magic) Init(opts ...server.Option) error {
@@ -19,6 +24,7 @@ func (m *m1Magic) Init(opts ...server.Option) error {
 }
 
 func (m *m1Magic) Start(name string) (string, error) {
+	fmt.Printf("m1Magic")
 	return name, nil
 }
 

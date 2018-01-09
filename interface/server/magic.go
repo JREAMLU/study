@@ -22,7 +22,7 @@ func NewMagic(opts ...Option) Magic {
 		o(&options)
 
 	}
-	return nil
+	return newDefaultMagic(opts...)
 }
 
 // Init init

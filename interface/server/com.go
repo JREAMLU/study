@@ -1,3 +1,4 @@
 package server
 
-var mg Magic
+// MG mg
+var MG = DefaultMagic
