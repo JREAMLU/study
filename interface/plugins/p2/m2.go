@@ -13,7 +13,7 @@ type m2Magic struct {
 }
 
 func init() {
-	server.MG = NewMagic()
+	server.MG["p2"] = NewMagic()
 }
 
 func (m *m2Magic) Init(opts ...server.Option) error {

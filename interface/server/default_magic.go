@@ -11,6 +11,7 @@ type defaultMagic struct {
 }
 
 func init() {
+	MG["default"] = DefaultMagic
 }
 
 func (m *defaultMagic) Init(opts ...Option) error {
