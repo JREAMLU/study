@@ -1,0 +1,11 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: docker-http-ingress
+spec:
+    rules:
+    - http:
+        paths:
+        - backend:
+            serviceName: docker-http
+            servicePort: 7890
