@@ -1,0 +1,41 @@
+package main
+
+import (
+	"fmt"
+
+	config "github.com/micro/go-config"
+	"github.com/micro/go-config/source/file"
+)
+
+type Host struct {
+	Address string `json:"address"`
+	Port    int    `json:"port"`
+}
+
+var host Host
+
+func main() {
+	config.Load(file.NewSource(
+		file.WithPath("config.json"),
+	))
+
+	config.Get("hosts", "database").Scan(&host)
+	fmt.Println("++++++++++++: ", host)
+
+	w, err := config.Watch("hosts", "database")
+	if err != nil {
+		fmt.Println("++++++++++++: ", err)
+		return
+	}
+
+	for {
+		v, err := w.Next()
+		if err != nil {
+			fmt.Println("++++++++++++: ", err)
+			return
+		}
+
+		v.Scan(&host)
+		fmt.Println("++++++++++++: ", host)
+	}
+}
