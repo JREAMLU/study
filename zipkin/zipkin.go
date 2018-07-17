@@ -6,6 +6,7 @@ import (
 	"os"
 
 	opentracing "github.com/opentracing/opentracing-go"
+	"github.com/opentracing/opentracing-go/log"
 	zipkin "github.com/openzipkin/zipkin-go-opentracing"
 )
 
@@ -54,6 +55,12 @@ func main() {
 
 func server1(ctx context.Context) {
 	span, _ := opentracing.StartSpanFromContext(ctx, "call server1")
+	span.SetTag("host", "8888")
+	span.LogFields(
+		log.String("type", "fields"),
+		log.String("error", "mis match"),
+	)
+	span.LogKV("name", "luj", "skill", "go", "ab", 99)
 	span.LogEvent("call server1 over")
 	span.Finish()
 }
