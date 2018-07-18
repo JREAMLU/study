@@ -16,6 +16,6 @@ func NewS3Handler() *S3 {
 
 // CHello h w
 func (s *S3) CHello(ctx context.Context, req *proto.CHelloRequest, resp *proto.CHelloResponse) error {
-	resp.Greeting = "BHello " + req.Name
+	resp.Greeting = "S3: CHello " + req.Name
 	return nil
 }
