@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+service S3 {
+	rpc CHello(CHelloRequest) returns (CHelloResponse) {}
+}
+
+message CHelloRequest {
+	string name = 1;
+}
+
+message CHelloResponse {
+	string greeting = 1;
+}

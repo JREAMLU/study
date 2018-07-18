@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+service S1 {
+	rpc AHello(AHelloRequest) returns (AHelloResponse) {}
+}
+
+message AHelloRequest {
+	string name = 1;
+}
+
+message AHelloResponse {
+	string greeting = 1;
+}
