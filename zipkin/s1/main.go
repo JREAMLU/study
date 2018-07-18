@@ -35,14 +35,20 @@ func RunMicroService() {
 		micro.Transport(transportGrpc.NewTransport()),
 		micro.Name("go.micro.srv.s1"),
 		micro.Version("v1"),
-		micro.WrapClient(util.TraceWrapperClent),
-		micro.WrapHandler(util.TraceWrapperHandler),
+		// micro.WrapClient(util.TraceWrapperClent),
+		// micro.WrapHandler(util.TraceWrapperHandler),
 	)
 
 	// Init will parse the command line flags.
 	ms.Init(
 		micro.RegisterTTL(1*time.Second),
 		micro.RegisterInterval(1*time.Second),
+	)
+
+	util.SetZipkin(
+		ms,
+		[]string{"10.200.119.128:9092", "10.200.119.129:9092", "10.200.119.130:9092"},
+		"web_log_get",
 	)
 
 	// Register handler
