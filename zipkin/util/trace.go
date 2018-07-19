@@ -46,6 +46,7 @@ func setZipkin(serviceName, version string, kafkaAddrs []string, kafkaTopic stri
 			panic(err)
 		}
 
+		// @TODO wrapper
 		clientWrap := opentracing.NewClientWrapper(tracer)
 		serverWrap := opentracing.NewHandlerWrapper(tracer)
 
