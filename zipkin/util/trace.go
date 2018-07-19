@@ -1,13 +1,48 @@
 package util
 
 import (
+	"context"
 	"fmt"
 	"net"
 
 	micro "github.com/micro/go-micro"
+	"github.com/micro/go-micro/client"
 	"github.com/micro/go-plugins/wrapper/trace/opentracing"
 	zipkin "github.com/openzipkin/zipkin-go-opentracing"
 )
+
+type logWrapper struct {
+	client.Client
+}
+
+func (l *logWrapper) Call(ctx context.Context, req client.Request, rsp interface{}, opts ...client.CallOption) error {
+	fmt.Printf("[wrapper] client request service: %s method: %s\n", req.Service(), req.Method())
+	return l.Client.Call(ctx, req, rsp)
+}
+
+// Implements client.Wrapper as logWrapper
+func LogWrap(c client.Client) client.Client {
+	return &logWrapper{c}
+}
+
+func NewClientWrapper() client.Wrapper {
+	cc := func(c client.Client) client.Client {
+		return &logWrapper{c}
+	}
+
+	return cc
+}
+
+func SetZ(service micro.Service) {
+	opts := service.Options()
+
+	setz := func(opt *micro.Options) {
+		client := NewClientWrapper()
+		micro.WrapClient(client, client)(opt)
+	}
+
+	setz(&opts)
+}
 
 // SetZipkin set zipkin trace
 func SetZipkin(service micro.Service, kafkaAddrs []string, kafkaTopic string, hostPort ...string) {
@@ -46,7 +81,6 @@ func setZipkin(serviceName, version string, kafkaAddrs []string, kafkaTopic stri
 			panic(err)
 		}
 
-		// @TODO wrapper
 		clientWrap := opentracing.NewClientWrapper(tracer)
 		serverWrap := opentracing.NewHandlerWrapper(tracer)
 

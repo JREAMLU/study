@@ -3,10 +3,10 @@ package main
 import (
 	"time"
 
+	"github.com/JREAMLU/j-kit/go-micro/util"
 	"github.com/JREAMLU/study/zipkin/s3/controller"
 	proto "github.com/JREAMLU/study/zipkin/s3/proto"
 	"github.com/JREAMLU/study/zipkin/s3/service"
-	"github.com/JREAMLU/study/zipkin/util"
 	micro "github.com/micro/go-micro"
 
 	// brokerKafka "github.com/micro/go-plugins/broker/kafka"
