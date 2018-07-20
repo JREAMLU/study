@@ -3,12 +3,13 @@ package main
 import (
 	"time"
 
+	"github.com/JREAMLU/j-kit/go-micro/trace/opentracing"
 	"github.com/JREAMLU/j-kit/go-micro/util"
 	"github.com/JREAMLU/study/zipkin/s3/controller"
 	proto "github.com/JREAMLU/study/zipkin/s3/proto"
 	"github.com/JREAMLU/study/zipkin/s3/service"
-	micro "github.com/micro/go-micro"
 
+	micro "github.com/micro/go-micro"
 	// brokerKafka "github.com/micro/go-plugins/broker/kafka"
 	clientGrpc "github.com/micro/go-plugins/client/grpc"
 	registerConsul "github.com/micro/go-plugins/registry/consul"
@@ -22,6 +23,11 @@ func main() {
 
 // RunMicroService run micro service
 func RunMicroService() {
+	t, err := util.NewTrace("go.micro.srv.s3", "v1", []string{"10.200.119.128:9092", "10.200.119.129:9092", "10.200.119.130:9092"}, "web_log_get")
+	if err != nil {
+		panic(err)
+	}
+
 	// Create a new service. Optionally include some options here.
 	ms := micro.NewService(
 		micro.Client(clientGrpc.NewClient()),
@@ -35,8 +41,8 @@ func RunMicroService() {
 		micro.Transport(transportGrpc.NewTransport()),
 		micro.Name("go.micro.srv.s3"),
 		micro.Version("v1"),
-		// micro.WrapClient(util.TraceWrapperClent),
-		// micro.WrapHandler(util.TraceWrapperHandler),
+		micro.WrapClient(opentracing.NewClientWrapper(t)),
+		micro.WrapHandler(opentracing.NewHandlerWrapper(t)),
 	)
 
 	// Init will parse the command line flags.

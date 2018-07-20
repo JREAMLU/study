@@ -8,8 +8,13 @@ import (
 
 // GetB get b
 func GetB(ctx context.Context) (string, error) {
+	m := make(map[string]string)
+	m["x"] = "y"
+
 	resp, err := s2Client.BHello(ctx, &s2.BHelloRequest{
-		Name: "Iverson",
+		Name:   "Iverson",
+		Rid:    []string{"abc", "edf"},
+		Extras: m,
 	})
 
 	if err != nil {

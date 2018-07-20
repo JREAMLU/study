@@ -8,8 +8,8 @@ import (
 	"github.com/JREAMLU/study/zipkin/s1/controller"
 	proto "github.com/JREAMLU/study/zipkin/s1/proto"
 	"github.com/JREAMLU/study/zipkin/s1/service"
-	micro "github.com/micro/go-micro"
 
+	micro "github.com/micro/go-micro"
 	// brokerKafka "github.com/micro/go-plugins/broker/kafka"
 	clientGrpc "github.com/micro/go-plugins/client/grpc"
 	registerConsul "github.com/micro/go-plugins/registry/consul"
