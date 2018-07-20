@@ -51,12 +51,6 @@ func RunMicroService() {
 		micro.RegisterInterval(1*time.Second),
 	)
 
-	util.SetZipkin(
-		ms,
-		[]string{"10.200.119.128:9092", "10.200.119.129:9092", "10.200.119.130:9092"},
-		"web_log_get",
-	)
-
 	// Register handler
 	proto.RegisterS3Handler(ms.Server(), controller.NewS3Handler())
 
