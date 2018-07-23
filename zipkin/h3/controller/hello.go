@@ -1,12 +1,9 @@
 package controller
 
 import (
-	"context"
-	"fmt"
 	"net/http"
 
-	"github.com/JREAMLU/study/zipkin/h1/config"
-	"github.com/JREAMLU/study/zipkin/h1/service"
+	"github.com/JREAMLU/study/zipkin/h3/config"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,18 +23,6 @@ func NewHelloController(conf *config.HelloConfig) *HelloController {
 
 // World world
 func (h *HelloController) World(c *gin.Context) {
-	s, err := service.GetA(context.Background())
-	if err != nil {
-		fmt.Println("err:", err)
-		return
-	}
-
-	err = service.Geth2(c.Request.Context())
-	if err != nil {
-		fmt.Println("err:", err)
-		return
-	}
-
 	request := c.MustGet("request").(string)
-	c.String(http.StatusOK, "Hello World %v, %v", request, s)
+	c.String(http.StatusOK, "Hello World 3 %v", request)
 }
