@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 
+	"github.com/JREAMLU/j-kit/go-micro/util"
 	proto "github.com/JREAMLU/study/zipkin/s1/proto"
 	"github.com/JREAMLU/study/zipkin/s1/service"
 )
@@ -22,6 +23,12 @@ func (s *S1) AHello(ctx context.Context, req *proto.AHelloRequest, resp *proto.A
 		return err
 	}
 
+	af(ctx, "af")
+
 	resp.Greeting = "S1: AHello " + req.Name + " " + s2
 	return nil
+}
+
+func af(ctx context.Context, name string) {
+	util.TraceLog(ctx, "af")
 }
