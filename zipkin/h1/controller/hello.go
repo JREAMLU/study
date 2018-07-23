@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
@@ -26,13 +25,14 @@ func NewHelloController(conf *config.HelloConfig) *HelloController {
 
 // World world
 func (h *HelloController) World(c *gin.Context) {
-	s, err := service.GetA(context.Background())
+	ctx := c.Request.Context()
+	err := service.Geth2(ctx)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
 
-	err = service.Geth2(c.Request.Context())
+	s, err := service.GetA(ctx)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
