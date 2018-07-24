@@ -23,12 +23,18 @@ func (s *S1) AHello(ctx context.Context, req *proto.AHelloRequest, resp *proto.A
 		return err
 	}
 
+	s3, err := service.GetC(ctx)
+	if err != nil {
+		return err
+	}
+
 	af(ctx, "af")
 
-	resp.Greeting = "S1: AHello " + req.Name + " " + s2
+	resp.Greeting = "S1: AHello " + req.Name + " " + s2 + " " + s3
 	return nil
 }
 
 func af(ctx context.Context, name string) {
-	util.TraceLog(ctx, "af")
+	// util.TraceLog(ctx, "af")
+	util.TraceLogInject(ctx, "af", "rrrrr")
 }

@@ -32,12 +32,12 @@ func (h *HelloController) World(c *gin.Context) {
 		return
 	}
 
-	s, err := service.GetA(ctx)
-	if err != nil {
-		fmt.Println("err:", err)
-		return
-	}
+	// s, err := service.GetA(ctx)
+	// if err != nil {
+	// 	fmt.Println("err:", err)
+	// 	return
+	// }
 
 	request := c.MustGet("request").(string)
-	c.String(http.StatusOK, "Hello World %v, %v", request, s)
+	c.String(http.StatusOK, "Hello World %v, %v", request, "")
 }

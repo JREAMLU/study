@@ -2,12 +2,14 @@ package main
 
 import (
 	"github.com/JREAMLU/j-kit/go-micro/util"
+	"github.com/JREAMLU/j-kit/http"
 	"github.com/JREAMLU/study/zipkin/h1/config"
 	"github.com/JREAMLU/study/zipkin/h1/router"
 	"github.com/JREAMLU/study/zipkin/h1/service"
 
 	"github.com/gin-gonic/gin"
 	microClient "github.com/micro/go-plugins/client/grpc"
+	wraphh "github.com/turtlemonvh/gin-wraphh"
 )
 
 func main() {
@@ -26,6 +28,8 @@ func main() {
 
 	g := gin.New()
 	g.Use(gin.Recovery(), gin.Logger())
+	g.Use(wraphh.WrapHH(http.FromHTTPRequest(t, "go.http.srv.h1")))
+
 	g = router.GetRouters(g, conf)
 	g.Run(":8001")
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/micro/go-micro/metadata"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/log"
 	zipkin "github.com/openzipkin/zipkin-go-opentracing"
@@ -46,14 +47,16 @@ func main() {
 	opentracing.InitGlobalTracer(tracer)
 
 	span := opentracing.StartSpan("Run")
+	// sc, _ := span.Context().(zipkin.SpanContext)
+	// fmt.Println("++++++++++++: ", sc.TraceID.ToHex())
 	defer span.Finish()
 	ctx := opentracing.ContextWithSpan(context.Background(), span)
-	span.LogEvent("log Call server1")
-	server1(ctx)
-	span.LogEvent("log Call server1 over")
+	server1(ctx, tracer)
+	server2(ctx, tracer)
+	server3(ctx, tracer)
 }
 
-func server1(ctx context.Context) {
+func server1(ctx context.Context, t opentracing.Tracer) {
 	span, _ := opentracing.StartSpanFromContext(ctx, "call server1")
 	span.SetTag("host", "8888")
 	span.LogFields(
@@ -62,5 +65,49 @@ func server1(ctx context.Context) {
 	)
 	span.LogKV("name", "luj", "skill", "go", "ab", 99)
 	span.LogEvent("call server1 over")
+	span.Finish()
+}
+
+func server2(ctx context.Context, t opentracing.Tracer) {
+	md, ok := metadata.FromContext(ctx)
+	if !ok {
+		md = make(map[string]string)
+	}
+
+	span, _ := opentracing.StartSpanFromContext(ctx, "call server2")
+	err := span.Tracer().Inject(span.Context(), opentracing.TextMap, opentracing.TextMapCarrier(md))
+	if err != nil {
+		fmt.Println("err: ", err)
+		return
+	}
+	span.LogEvent("server2")
+	span.Finish()
+}
+
+func server3(ctx context.Context, t opentracing.Tracer) {
+	md, ok := metadata.FromContext(ctx)
+	if !ok {
+		md = make(map[string]string)
+	}
+
+	var span opentracing.Span
+	wireContext, err := t.Extract(opentracing.TextMap, opentracing.TextMapCarrier(md))
+	if err != nil {
+		fmt.Println("++++++++++++: ", err)
+		span = t.StartSpan("server3", opentracing.ChildOf(wireContext))
+	} else {
+		span = t.StartSpan("server3")
+	}
+
+	err = span.Tracer().Inject(span.Context(), opentracing.TextMap, opentracing.TextMapCarrier(md))
+	if err != nil {
+		fmt.Println("err2: ", err)
+		return
+	}
+
+	// ctx = opentracing.ContextWithSpan(ctx, span)
+	// ctx = metadata.NewContext(ctx, md)
+
+	span.LogEvent("server3")
 	span.Finish()
 }
