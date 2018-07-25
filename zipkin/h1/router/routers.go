@@ -11,7 +11,7 @@ import (
 func GetRouters(router *gin.Engine, conf *config.HelloConfig) *gin.Engine {
 	// hello world
 	router.GET("/h1", middleware.Middle(), controller.NewHelloController(conf).World)
-	router.POST("/h1", middleware.Middle(), controller.NewHelloController(conf).World)
+	router.POST("/h1", middleware.Middle(), controller.NewHelloController(conf).WorldP)
 
 	return router
 }
