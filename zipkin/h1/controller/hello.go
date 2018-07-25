@@ -41,3 +41,22 @@ func (h *HelloController) World(c *gin.Context) {
 	request := c.MustGet("request").(string)
 	c.String(http.StatusOK, "Hello World %v, %v", request, "")
 }
+
+// WorldP World Post
+func (h *HelloController) WorldP(c *gin.Context) {
+	ctx := c.Request.Context()
+	err := service.Geth2(ctx)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+
+	// s, err := service.GetA(ctx)
+	// if err != nil {
+	// 	fmt.Println("err:", err)
+	// 	return
+	// }
+
+	request := c.MustGet("request").(string)
+	c.String(http.StatusOK, "Hello World %v, %v", request, "")
+}
