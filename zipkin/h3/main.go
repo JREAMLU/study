@@ -7,7 +7,6 @@ import (
 	"github.com/JREAMLU/study/zipkin/h3/router"
 
 	"github.com/gin-gonic/gin"
-	wraphh "github.com/turtlemonvh/gin-wraphh"
 )
 
 func main() {
@@ -22,8 +21,7 @@ func main() {
 	}
 
 	g := gin.New()
-	g.Use(gin.Recovery(), gin.Logger())
-	g.Use(wraphh.WrapHH(http.FromHTTPRequest(t, "go.http.srv.h3")))
+	g.Use(gin.Recovery(), gin.Logger(), http.HandlerHTTPRequestGin(t, "go.http.srv.h3"))
 
 	g = router.GetRouters(g, conf)
 	g.Run(":8003")

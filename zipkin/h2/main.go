@@ -24,7 +24,6 @@ func main() {
 	service.InitHTTPClient(t)
 
 	g := gin.New()
-	g.Use(gin.Recovery(), gin.Logger())
 	g.Use(gin.Recovery(), gin.Logger(), http.HandlerHTTPRequestGin(t, "go.http.srv.h2"))
 
 	g = router.GetRouters(g, conf)
