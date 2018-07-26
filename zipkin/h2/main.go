@@ -1,6 +1,9 @@
 package main
 
 import (
+	"time"
+
+	"github.com/JREAMLU/j-kit/go-micro/trace/opentracing"
 	"github.com/JREAMLU/j-kit/go-micro/util"
 	"github.com/JREAMLU/j-kit/http"
 	"github.com/JREAMLU/study/zipkin/h2/config"
@@ -8,6 +11,11 @@ import (
 	"github.com/JREAMLU/study/zipkin/h2/service"
 
 	"github.com/gin-gonic/gin"
+	micro "github.com/micro/go-micro"
+	clientGrpc "github.com/micro/go-plugins/client/grpc"
+	registerConsul "github.com/micro/go-plugins/registry/consul"
+	transportGrpc "github.com/micro/go-plugins/transport/grpc"
+	// microClient "github.com/micro/go-plugins/client/grpc"
 )
 
 func main() {
@@ -21,6 +29,19 @@ func main() {
 		panic(err)
 	}
 
+	ms := micro.NewService(
+		micro.Client(clientGrpc.NewClient()),
+		micro.Registry(registerConsul.NewRegistry()),
+		micro.Transport(transportGrpc.NewTransport()),
+		micro.WrapClient(opentracing.NewClientWrapper(t)),
+		micro.WrapHandler(opentracing.NewHandlerWrapper(t)),
+	)
+	ms.Init(
+		micro.RegisterTTL(1*time.Second),
+		micro.RegisterInterval(1*time.Second),
+	)
+	service.InitMicroClient(ms.Client())
+	// service.InitMicroClient(microClient.NewClient())
 	service.InitHTTPClient(t)
 
 	g := gin.New()

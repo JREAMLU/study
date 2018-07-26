@@ -45,6 +45,12 @@ func (h *HelloController) WorldP(c *gin.Context) {
 		return
 	}
 
+	s, err := service.GetA(ctx)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+
 	request := c.MustGet("request").(string)
-	c.String(http.StatusOK, "Hello World 2 %v", request)
+	c.String(http.StatusOK, "Hello World 2 %v %v", request, s)
 }
