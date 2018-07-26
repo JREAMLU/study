@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+
+	"github.com/JREAMLU/j-kit/go-micro/util"
 )
 
 // Geth2 h2
@@ -35,5 +37,12 @@ func Geth2P(ctx context.Context) error {
 		return err
 	}
 
+	return nil
+}
+
+// GetH1 h1 func
+func GetH1(ctx context.Context) error {
+	// util.TraceLog(ctx, "get h1")
+	util.TraceLogInject(ctx, "GetH1", "h111111")
 	return nil
 }
