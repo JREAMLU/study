@@ -90,8 +90,8 @@ func server3(ctx context.Context, t opentracing.Tracer) {
 		md = make(map[string]string)
 	}
 
-	md["X-B3-Traceid"] = "22222222222222222222222222222222"
-	md["X-B3-Spanid"] = "3026f32106380fcd"
+	md["X-B3-Traceid"] = "33333333333333333333333333333333"
+	md["X-B3-Spanid"] = "3026f32106380fce"
 	md["X-B3-Parentspanid"] = "63f8b1163e0dfead"
 	md["X-B3-Flags"] = "0"
 	md["X-B3-Sampled"] = "1"

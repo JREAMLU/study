@@ -46,13 +46,13 @@ func (h *HelloController) World(c *gin.Context) {
 func (h *HelloController) WorldP(c *gin.Context) {
 	ctx := c.Request.Context()
 
-	// err := service.GetH1(ctx)
-	// if err != nil {
-	// 	fmt.Println("err:", err)
-	// 	return
-	// }
+	err := service.GetH1(ctx)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
 
-	err := service.Geth2P(ctx)
+	err = service.Geth2P(ctx)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
