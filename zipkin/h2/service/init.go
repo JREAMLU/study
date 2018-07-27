@@ -2,7 +2,6 @@ package service
 
 import (
 	"github.com/JREAMLU/j-kit/http"
-
 	s1PB "github.com/JREAMLU/study/zipkin/s1/proto"
 
 	microClient "github.com/micro/go-micro/client"

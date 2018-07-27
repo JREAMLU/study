@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	t, err := util.NewTrace("go.http.srv.h2", "v1", []string{"10.200.119.128:9092", "10.200.119.129:9092", "10.200.119.130:9092"}, "web_log_get")
+	t, err := util.NewTrace("go.http.srv.h3", "v1", []string{"10.200.119.128:9092", "10.200.119.129:9092", "10.200.119.130:9092"}, "web_log_get")
 	if err != nil {
 		panic(err)
 	}
