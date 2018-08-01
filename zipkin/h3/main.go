@@ -1,28 +1,25 @@
 package main
 
 import (
-	"github.com/JREAMLU/j-kit/go-micro/util"
 	"github.com/JREAMLU/j-kit/http"
 	"github.com/JREAMLU/study/zipkin/h3/config"
 	"github.com/JREAMLU/study/zipkin/h3/router"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	t, err := util.NewTrace("go.http.srv.h3", "v1", []string{"10.200.119.128:9092", "10.200.119.129:9092", "10.200.119.130:9092"}, "web_log_get")
+	// load config
+	conf, err := config.Load()
 	if err != nil {
 		panic(err)
 	}
 
-	conf, err := config.LoadConfig()
-	if err != nil {
-		panic(err)
-	}
+	RunHTTPService(conf)
+}
 
-	g := gin.New()
-	g.Use(gin.Recovery(), gin.Logger(), http.HandlerHTTPRequestGin(t, "go.http.srv.h3"))
+// RunHTTPService run http service
+func RunHTTPService(conf *config.HelloConfig) {
+	_, g, _ := http.NewHTTPService(conf.Config)
 
 	g = router.GetRouters(g, conf)
-	g.Run(":8003")
+	g.Run(conf.Web.URL)
 }

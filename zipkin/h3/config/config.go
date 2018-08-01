@@ -1,26 +1,28 @@
 package config
 
+import "github.com/JREAMLU/j-kit/go-micro/util"
+
 const (
-	name    = "example"
-	version = "v1"
+	serverName    = "h3"
+	configVersion = "v1"
 )
 
 // HelloConfig hello config
 type HelloConfig struct {
+	*util.Config
+
 	Hello struct {
-		Tip string `yaml:"tip"`
-	} `yaml:"hello"`
+		Secret string
+	}
 }
 
-// LoadConfig load config
-func LoadConfig() (*HelloConfig, error) {
-	// loadConfig
+// Load load config
+func Load() (*HelloConfig, error) {
+	// load redis mysql elastic client
 
+	// load parent config
 	config := &HelloConfig{}
-	return config, nil
-}
+	err := util.LoadCustomConfig("10.200.202.35:8500", serverName, configVersion, config)
 
-// reload watch reload consul
-func reload() {
-	// consul config has changed
+	return config, err
 }
