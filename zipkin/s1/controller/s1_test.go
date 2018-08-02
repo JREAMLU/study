@@ -15,14 +15,37 @@ func TestStart(t *testing.T) {
 	Convey("start", t, func() {
 		c := microClient.NewClient()
 		client := proto.S1ServiceClient(serviceName, c)
-		resp, err := client.AHello(context.Background(), &proto.AHelloRequest{
+		for i := 0; i < 10; i++ {
+			resp, err := client.AHello(context.Background(), &proto.AHelloRequest{
+				Name: "LBJ",
+			})
+			if err != nil {
+				t.Log("err: ", err)
+				return
+			}
+
+			t.Log("resp: ", resp.Greeting)
+		}
+	})
+}
+
+func BenchmarkStart(b *testing.B) {
+	serviceName := "go.micro.srv.s1"
+	c := microClient.NewClient()
+	client := proto.S1ServiceClient(serviceName, c)
+	b.StopTimer()
+
+	b.StartTimer()
+	for i := 0; i < b.N; i++ {
+		_, err := client.AHello(context.Background(), &proto.AHelloRequest{
 			Name: "LBJ",
 		})
 		if err != nil {
-			t.Log("err: ", err)
+			b.Log("err: ", err)
 			return
 		}
 
-		t.Log("resp: ", resp.Greeting)
-	})
+		// b.Log("resp: ", resp.Greeting)
+	}
+	b.StopTimer()
 }
