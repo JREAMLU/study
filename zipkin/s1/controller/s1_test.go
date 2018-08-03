@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"sync"
 	"testing"
 
 	proto "github.com/JREAMLU/study/zipkin/s1/proto"
@@ -15,17 +16,23 @@ func TestStart(t *testing.T) {
 	Convey("start", t, func() {
 		c := microClient.NewClient()
 		client := proto.S1ServiceClient(serviceName, c)
+		var wg sync.WaitGroup
 		for i := 0; i < 10; i++ {
-			resp, err := client.AHello(context.Background(), &proto.AHelloRequest{
-				Name: "LBJ",
-			})
-			if err != nil {
-				t.Log("err: ", err)
-				return
-			}
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				resp, err := client.AHello(context.Background(), &proto.AHelloRequest{
+					Name: "LBJ",
+				})
+				if err != nil {
+					t.Log("err: ", err)
+					return
+				}
 
-			t.Log("resp: ", resp.Greeting)
+				t.Log("resp: ", resp.Greeting)
+			}()
 		}
+		wg.Wait()
 	})
 }
 
