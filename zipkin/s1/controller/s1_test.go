@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"sync"
 	"testing"
 
 	proto "github.com/JREAMLU/study/zipkin/s1/proto"
@@ -13,7 +12,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestStart(t *testing.T) {
+func TestStartSingle(t *testing.T) {
 	serviceName := "go.micro.srv.s1"
 
 	// add trace toggle
@@ -24,25 +23,48 @@ func TestStart(t *testing.T) {
 	Convey("start", t, func() {
 		c := microClient.NewClient()
 		client := proto.S1ServiceClient(serviceName, c)
-		var wg sync.WaitGroup
-		for i := 0; i < 10; i++ {
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-				resp, err := client.AHello(ctx, &proto.AHelloRequest{
-					Name: "LBJ",
-				})
-				if err != nil {
-					t.Log("err: ", err)
-					return
-				}
-
-				t.Log("resp: ", resp.Greeting)
-			}()
+		resp, err := client.AHello(ctx, &proto.AHelloRequest{
+			Name: "LBJ",
+		})
+		if err != nil {
+			t.Log("err: ", err)
+			return
 		}
-		wg.Wait()
+
+		t.Log("resp: ", resp.Greeting)
 	})
 }
+
+// func TestStart(t *testing.T) {
+// 	serviceName := "go.micro.srv.s1"
+//
+// 	// add trace toggle
+// 	md := make(map[string]string)
+// 	md[jopentracing.ZipkinToggle] = "1"
+// 	ctx := metadata.NewContext(context.Background(), md)
+//
+// 	Convey("start", t, func() {
+// 		c := microClient.NewClient()
+// 		client := proto.S1ServiceClient(serviceName, c)
+// 		var wg sync.WaitGroup
+// 		for i := 0; i < 10; i++ {
+// 			wg.Add(1)
+// 			go func() {
+// 				defer wg.Done()
+// 				resp, err := client.AHello(ctx, &proto.AHelloRequest{
+// 					Name: "LBJ",
+// 				})
+// 				if err != nil {
+// 					t.Log("err: ", err)
+// 					return
+// 				}
+//
+// 				t.Log("resp: ", resp.Greeting)
+// 			}()
+// 		}
+// 		wg.Wait()
+// 	})
+// }
 
 // func TestStartB(t *testing.T) {
 // 	serviceName := "go.micro.srv.s1"
