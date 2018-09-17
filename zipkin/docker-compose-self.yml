@@ -17,10 +17,10 @@ services:
     # Environment settings are defined here https://github.com/openzipkin/zipkin/tree/1.19.0/zipkin-server#environment-variables
     environment:
       - STORAGE_TYPE=elasticsearch
-      - ES_HOSTS=http://10.200.202.36:9200
+      - ES_HOSTS=http://localhost:9200
       - ES_INDEX=zipkin
       - ES_MAX_REQUESTS=512
-      - KAFKA_BOOTSTRAP_SERVERS=10.200.119.128:9092
+      - KAFKA_BOOTSTRAP_SERVERS=localhost:9092
       # - KAFKA_BOOTSTRAP_SERVERS=10.200.119.128:9092,10.200.119.129:9092,10.200.119.130:9092
       - KAFKA_TOPIC=zipkin
       # Point the zipkin at the storage backend
