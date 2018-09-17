@@ -25,7 +25,7 @@ func Load() (*S2Config, error) {
 
 	// load parent config
 	s2Config := &S2Config{}
-	err := util.LoadCustomConfig("10.200.202.35:8500", serverName, configVersion, s2Config)
+	err := util.LoadCustomConfig("127.0.0.1:8500", serverName, configVersion, s2Config)
 
 	return s2Config, err
 }

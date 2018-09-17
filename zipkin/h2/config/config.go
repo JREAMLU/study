@@ -22,7 +22,7 @@ func Load() (*HelloConfig, error) {
 
 	// load parent config
 	config := &HelloConfig{}
-	err := util.LoadCustomConfig("10.200.202.35:8500", serverName, configVersion, config)
+	err := util.LoadCustomConfig("127.0.0.1:8500", serverName, configVersion, config)
 
 	return config, err
 }

@@ -25,7 +25,7 @@ func Load() (*S3Config, error) {
 
 	// load parent config
 	s3Config := &S3Config{}
-	err := util.LoadCustomConfig("10.200.202.35:8500", serverName, configVersion, s3Config)
+	err := util.LoadCustomConfig("127.0.0.1:8500", serverName, configVersion, s3Config)
 
 	return s3Config, err
 }
