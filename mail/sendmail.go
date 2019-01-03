@@ -23,10 +23,16 @@ func main() {
 	// m.SetAddressHeader("Cc", "", "dan")
 	m.SetHeader("Subject", "Newsletter #1")
 
-	h := hermes.Hermes{}
+	h := hermes.Hermes{
+		Product: hermes.Product{
+			Name:      "YaoMing",
+			Copyright: "Copyright © 2019. All rights reserved.",
+		},
+	}
 
 	email := hermes.Email{
 		Body: hermes.Body{
+			Signature: "Yours truly, YaoMing",
 			FreeMarkdown: `
 > _Hermes_ service will shutdown the **1st August 2017** for maintenance operations. 
 
