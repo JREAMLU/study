@@ -1,0 +1,50 @@
+package main
+
+import (
+	"fmt"
+	"log"
+	"net"
+	"net/url"
+	"time"
+
+	"github.com/gorilla/websocket"
+	"golang.org/x/net/proxy"
+)
+
+var tpcConn *net.TCPConn
+
+func main() {
+	// sock5代理 也支持 env
+	netDialer, err := proxy.SOCKS5("TCP", "0.0.0.0:9090", &proxy.Auth{}, nil)
+	if err != nil {
+		return
+	}
+
+	u := url.URL{Scheme: "ws", Host: "127.0.0.1:8811", Path: "/echo"}
+	dialer := websocket.Dialer{NetDial: netDialer.Dial}
+	c, _, err := dialer.Dial(u.String(), nil)
+	if err != nil {
+		log.Fatal("dial:", err)
+	}
+	defer func() {
+		c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "88"))
+		c.Close()
+	}()
+
+	err = c.WriteMessage(websocket.TextMessage, []byte("123"))
+	fmt.Printf("err: %v \n", err)
+
+	go func() {
+		defer c.Close()
+		for {
+			_, message, err := c.ReadMessage()
+			if err != nil {
+				log.Println("read err:", err)
+				return
+			}
+			log.Printf("recv: %s", message)
+		}
+	}()
+
+	time.Sleep(time.Second * 1)
+}
