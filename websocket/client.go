@@ -13,6 +13,11 @@ import (
 var tpcConn *net.TCPConn
 
 func main() {
+	go conn(1)
+	conn(2)
+}
+
+func conn(id int64) {
 	u := url.URL{Scheme: "ws", Host: "127.0.0.1:8811", Path: "/echo"}
 
 	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
@@ -24,7 +29,10 @@ func main() {
 		c.Close()
 	}()
 
-	err = c.WriteMessage(websocket.TextMessage, []byte("123"))
+	// guid, _ := uuid.Generate()
+	// content := fmt.Sprintf("%s-%s", guid, "client")
+	content := fmt.Sprintf("%s-%d", "client", id)
+	err = c.WriteMessage(websocket.TextMessage, []byte(content))
 	fmt.Printf("err: %v \n", err)
 
 	go func() {
@@ -35,9 +43,9 @@ func main() {
 				log.Println("read err:", err)
 				return
 			}
-			log.Printf("recv: %s", message)
+			log.Printf("uid: %d, recv: %s", id, message)
 		}
 	}()
 
-	time.Sleep(time.Second * 1)
+	time.Sleep(time.Second * 5)
 }
