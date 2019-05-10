@@ -35,7 +35,7 @@ func main() {
 func run() {
 	u := url
 	// loop pageIndex pageSize
-	for i := 0; i < max; i++ {
+	for i := 1; i <= max; i++ {
 		d, err := getSoundClouds(u)
 		if err != nil {
 			fmt.Println("++++++++++++: url", url)
@@ -59,6 +59,10 @@ func run() {
 
 		u = fmt.Sprintf("%s%s", href, tail)
 		time.Sleep(interval * time.Millisecond)
+
+		if i == max {
+			fmt.Println("++++++++++++: url: ", u)
+		}
 	}
 }
 
