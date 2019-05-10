@@ -12,15 +12,17 @@ import (
 
 const (
 	// frist row
+	// url = `https://api-v2.soundcloud.com/stream/users/35228969?client_id=5IHUoTCYwQmJR7RbijX9OigWp2zCoiyC&limit=15&offset=0&linked_partitioning=1&app_version=1557315749&app_locale=en`
+	// url = `https://api-v2.soundcloud.com/stream/users/35228969?client_id=5IHUoTCYwQmJR7RbijX9OigWp2zCoiyC&limit=15&offset=0&linked_partitioning=1&app_version=1557315749&app_locale=en`
 	url = `https://api-v2.soundcloud.com/stream/users/35228969?client_id=5IHUoTCYwQmJR7RbijX9OigWp2zCoiyC&limit=15&offset=0&linked_partitioning=1&app_version=1557315749&app_locale=en`
 	// next_href + tail
 	tail = `&client_id=5IHUoTCYwQmJR7RbijX9OigWp2zCoiyC&app_version=1557315749&app_locale=en`
 	// local proxy ss
 	locProxy = `http://127.0.0.1:1087`
 	// filename
-	filename = `urls`
+	filename = `urls.txt`
 	// max size
-	max = 2
+	max = 20
 	// interval ms
 	interval = 1000
 )
