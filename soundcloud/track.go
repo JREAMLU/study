@@ -2,240 +2,6 @@ package main
 
 import "time"
 
-// Track track
-type Track struct {
-	Collection []struct {
-		CreatedAt time.Time `json:"created_at"`
-		Type      string    `json:"type"`
-		User      struct {
-			AvatarURL    string    `json:"avatar_url"`
-			FirstName    string    `json:"first_name"`
-			FullName     string    `json:"full_name"`
-			ID           int       `json:"id"`
-			Kind         string    `json:"kind"`
-			LastModified time.Time `json:"last_modified"`
-			LastName     string    `json:"last_name"`
-			Permalink    string    `json:"permalink"`
-			PermalinkURL string    `json:"permalink_url"`
-			URI          string    `json:"uri"`
-			Urn          string    `json:"urn"`
-			Username     string    `json:"username"`
-			Verified     bool      `json:"verified"`
-			City         string    `json:"city"`
-			CountryCode  string    `json:"country_code"`
-		} `json:"user"`
-		UUID  string `json:"uuid"`
-		Track struct {
-			ArtworkURL        string      `json:"artwork_url"`
-			Commentable       bool        `json:"commentable"`
-			CommentCount      int         `json:"comment_count"`
-			CreatedAt         time.Time   `json:"created_at"`
-			Description       string      `json:"description"`
-			Downloadable      bool        `json:"downloadable"`
-			DownloadCount     int         `json:"download_count"`
-			DownloadURL       interface{} `json:"download_url"`
-			Duration          int         `json:"duration"`
-			FullDuration      int         `json:"full_duration"`
-			EmbeddableBy      string      `json:"embeddable_by"`
-			Genre             string      `json:"genre"`
-			HasDownloadsLeft  bool        `json:"has_downloads_left"`
-			ID                int         `json:"id"`
-			Kind              string      `json:"kind"`
-			LabelName         interface{} `json:"label_name"`
-			LastModified      time.Time   `json:"last_modified"`
-			License           string      `json:"license"`
-			LikesCount        int         `json:"likes_count"`
-			Permalink         string      `json:"permalink"`
-			PermalinkURL      string      `json:"permalink_url"`
-			PlaybackCount     int         `json:"playback_count"`
-			Public            bool        `json:"public"`
-			PublisherMetadata struct {
-				ID            int    `json:"id"`
-				Urn           string `json:"urn"`
-				ContainsMusic bool   `json:"contains_music"`
-			} `json:"publisher_metadata"`
-			PurchaseTitle string      `json:"purchase_title"`
-			PurchaseURL   string      `json:"purchase_url"`
-			ReleaseDate   interface{} `json:"release_date"`
-			RepostsCount  int         `json:"reposts_count"`
-			SecretToken   interface{} `json:"secret_token"`
-			Sharing       string      `json:"sharing"`
-			State         string      `json:"state"`
-			Streamable    bool        `json:"streamable"`
-			TagList       string      `json:"tag_list"`
-			Title         string      `json:"title"`
-			URI           string      `json:"uri"`
-			Urn           string      `json:"urn"`
-			UserID        int         `json:"user_id"`
-			Visuals       interface{} `json:"visuals"`
-			WaveformURL   string      `json:"waveform_url"`
-			DisplayDate   time.Time   `json:"display_date"`
-			Media         struct {
-				Transcodings []struct {
-					URL      string `json:"url"`
-					Preset   string `json:"preset"`
-					Duration int    `json:"duration"`
-					Snipped  bool   `json:"snipped"`
-					Format   struct {
-						Protocol string `json:"protocol"`
-						MimeType string `json:"mime_type"`
-					} `json:"format"`
-					Quality string `json:"quality"`
-				} `json:"transcodings"`
-			} `json:"media"`
-			MonetizationModel string `json:"monetization_model"`
-			Policy            string `json:"policy"`
-			User              struct {
-				AvatarURL    string    `json:"avatar_url"`
-				FirstName    string    `json:"first_name"`
-				FullName     string    `json:"full_name"`
-				ID           int       `json:"id"`
-				Kind         string    `json:"kind"`
-				LastModified time.Time `json:"last_modified"`
-				LastName     string    `json:"last_name"`
-				Permalink    string    `json:"permalink"`
-				PermalinkURL string    `json:"permalink_url"`
-				URI          string    `json:"uri"`
-				Urn          string    `json:"urn"`
-				Username     string    `json:"username"`
-				Verified     bool      `json:"verified"`
-				City         string    `json:"city"`
-				CountryCode  string    `json:"country_code"`
-			} `json:"user"`
-		} `json:"track,omitempty"`
-		Playlist struct {
-			ArtworkURL     string      `json:"artwork_url"`
-			CreatedAt      time.Time   `json:"created_at"`
-			Description    string      `json:"description"`
-			Duration       int         `json:"duration"`
-			EmbeddableBy   string      `json:"embeddable_by"`
-			Genre          string      `json:"genre"`
-			ID             int         `json:"id"`
-			Kind           string      `json:"kind"`
-			LabelName      interface{} `json:"label_name"`
-			LastModified   time.Time   `json:"last_modified"`
-			License        string      `json:"license"`
-			LikesCount     int         `json:"likes_count"`
-			ManagedByFeeds bool        `json:"managed_by_feeds"`
-			Permalink      string      `json:"permalink"`
-			PermalinkURL   string      `json:"permalink_url"`
-			Public         bool        `json:"public"`
-			PurchaseTitle  interface{} `json:"purchase_title"`
-			PurchaseURL    string      `json:"purchase_url"`
-			ReleaseDate    time.Time   `json:"release_date"`
-			RepostsCount   int         `json:"reposts_count"`
-			SecretToken    interface{} `json:"secret_token"`
-			Sharing        string      `json:"sharing"`
-			TagList        string      `json:"tag_list"`
-			Title          string      `json:"title"`
-			URI            string      `json:"uri"`
-			UserID         int         `json:"user_id"`
-			SetType        string      `json:"set_type"`
-			IsAlbum        bool        `json:"is_album"`
-			PublishedAt    time.Time   `json:"published_at"`
-			DisplayDate    time.Time   `json:"display_date"`
-			User           struct {
-				AvatarURL    string    `json:"avatar_url"`
-				FirstName    string    `json:"first_name"`
-				FullName     string    `json:"full_name"`
-				ID           int       `json:"id"`
-				Kind         string    `json:"kind"`
-				LastModified time.Time `json:"last_modified"`
-				LastName     string    `json:"last_name"`
-				Permalink    string    `json:"permalink"`
-				PermalinkURL string    `json:"permalink_url"`
-				URI          string    `json:"uri"`
-				Urn          string    `json:"urn"`
-				Username     string    `json:"username"`
-				Verified     bool      `json:"verified"`
-				City         string    `json:"city"`
-				CountryCode  string    `json:"country_code"`
-			} `json:"user"`
-			Tracks []struct {
-				ArtworkURL        string      `json:"artwork_url,omitempty"`
-				Commentable       bool        `json:"commentable,omitempty"`
-				CommentCount      int         `json:"comment_count,omitempty"`
-				CreatedAt         time.Time   `json:"created_at,omitempty"`
-				Description       string      `json:"description,omitempty"`
-				Downloadable      bool        `json:"downloadable,omitempty"`
-				DownloadCount     int         `json:"download_count,omitempty"`
-				DownloadURL       interface{} `json:"download_url,omitempty"`
-				Duration          int         `json:"duration,omitempty"`
-				FullDuration      int         `json:"full_duration,omitempty"`
-				EmbeddableBy      string      `json:"embeddable_by,omitempty"`
-				Genre             string      `json:"genre,omitempty"`
-				HasDownloadsLeft  bool        `json:"has_downloads_left,omitempty"`
-				ID                int         `json:"id"`
-				Kind              string      `json:"kind"`
-				LabelName         interface{} `json:"label_name,omitempty"`
-				LastModified      time.Time   `json:"last_modified,omitempty"`
-				License           string      `json:"license,omitempty"`
-				LikesCount        int         `json:"likes_count,omitempty"`
-				Permalink         string      `json:"permalink,omitempty"`
-				PermalinkURL      string      `json:"permalink_url,omitempty"`
-				PlaybackCount     int         `json:"playback_count,omitempty"`
-				Public            bool        `json:"public,omitempty"`
-				PublisherMetadata struct {
-					ID            int    `json:"id"`
-					Urn           string `json:"urn"`
-					ContainsMusic bool   `json:"contains_music"`
-				} `json:"publisher_metadata,omitempty"`
-				PurchaseTitle interface{} `json:"purchase_title,omitempty"`
-				PurchaseURL   interface{} `json:"purchase_url,omitempty"`
-				ReleaseDate   time.Time   `json:"release_date,omitempty"`
-				RepostsCount  int         `json:"reposts_count,omitempty"`
-				SecretToken   interface{} `json:"secret_token,omitempty"`
-				Sharing       string      `json:"sharing,omitempty"`
-				State         string      `json:"state,omitempty"`
-				Streamable    bool        `json:"streamable,omitempty"`
-				TagList       string      `json:"tag_list,omitempty"`
-				Title         string      `json:"title,omitempty"`
-				URI           string      `json:"uri,omitempty"`
-				Urn           string      `json:"urn,omitempty"`
-				UserID        int         `json:"user_id,omitempty"`
-				Visuals       interface{} `json:"visuals,omitempty"`
-				WaveformURL   string      `json:"waveform_url,omitempty"`
-				DisplayDate   time.Time   `json:"display_date,omitempty"`
-				Media         struct {
-					Transcodings []struct {
-						URL      string `json:"url"`
-						Preset   string `json:"preset"`
-						Duration int    `json:"duration"`
-						Snipped  bool   `json:"snipped"`
-						Format   struct {
-							Protocol string `json:"protocol"`
-							MimeType string `json:"mime_type"`
-						} `json:"format"`
-						Quality string `json:"quality"`
-					} `json:"transcodings"`
-				} `json:"media,omitempty"`
-				MonetizationModel string `json:"monetization_model,omitempty"`
-				Policy            string `json:"policy,omitempty"`
-				User              struct {
-					AvatarURL    string    `json:"avatar_url"`
-					FirstName    string    `json:"first_name"`
-					FullName     string    `json:"full_name"`
-					ID           int       `json:"id"`
-					Kind         string    `json:"kind"`
-					LastModified time.Time `json:"last_modified"`
-					LastName     string    `json:"last_name"`
-					Permalink    string    `json:"permalink"`
-					PermalinkURL string    `json:"permalink_url"`
-					URI          string    `json:"uri"`
-					Urn          string    `json:"urn"`
-					Username     string    `json:"username"`
-					Verified     bool      `json:"verified"`
-					City         string    `json:"city"`
-					CountryCode  string    `json:"country_code"`
-				} `json:"user,omitempty"`
-			} `json:"tracks"`
-			TrackCount int `json:"track_count"`
-		} `json:"playlist,omitempty"`
-	} `json:"collection"`
-	NextHref string      `json:"next_href"`
-	QueryUrn interface{} `json:"query_urn"`
-}
-
 // Tracks if playlist it is tracks
 type Tracks struct {
 	Collection []struct {
@@ -268,7 +34,7 @@ type Tracks struct {
 			Genre          string      `json:"genre"`
 			ID             int         `json:"id"`
 			Kind           string      `json:"kind"`
-			LabelName      string      `json:"label_name"`
+			LabelName      interface{} `json:"label_name"`
 			LastModified   time.Time   `json:"last_modified"`
 			License        string      `json:"license"`
 			LikesCount     int         `json:"likes_count"`
@@ -276,7 +42,7 @@ type Tracks struct {
 			Permalink      string      `json:"permalink"`
 			PermalinkURL   string      `json:"permalink_url"`
 			Public         bool        `json:"public"`
-			PurchaseTitle  string      `json:"purchase_title"`
+			PurchaseTitle  interface{} `json:"purchase_title"`
 			PurchaseURL    string      `json:"purchase_url"`
 			ReleaseDate    time.Time   `json:"release_date"`
 			RepostsCount   int         `json:"reposts_count"`
@@ -336,8 +102,8 @@ type Tracks struct {
 					Urn           string `json:"urn"`
 					ContainsMusic bool   `json:"contains_music"`
 				} `json:"publisher_metadata"`
-				PurchaseTitle string      `json:"purchase_title"`
-				PurchaseURL   string      `json:"purchase_url"`
+				PurchaseTitle interface{} `json:"purchase_title"`
+				PurchaseURL   interface{} `json:"purchase_url"`
 				ReleaseDate   interface{} `json:"release_date"`
 				RepostsCount  int         `json:"reposts_count"`
 				SecretToken   interface{} `json:"secret_token"`
@@ -420,7 +186,7 @@ type Tracks struct {
 			} `json:"publisher_metadata"`
 			PurchaseTitle string      `json:"purchase_title"`
 			PurchaseURL   string      `json:"purchase_url"`
-			ReleaseDate   time.Time   `json:"release_date"`
+			ReleaseDate   interface{} `json:"release_date"`
 			RepostsCount  int         `json:"reposts_count"`
 			SecretToken   interface{} `json:"secret_token"`
 			Sharing       string      `json:"sharing"`
