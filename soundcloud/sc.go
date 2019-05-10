@@ -18,9 +18,9 @@ const (
 	// local proxy ss
 	locProxy = `http://127.0.0.1:1087`
 	// filename
-	filename = `track_urls`
+	filename = `urls`
 	// max size
-	max = 1
+	max = 2
 	// interval ms
 	interval = 1000
 )
@@ -54,6 +54,7 @@ func run() {
 			if err != nil {
 				panic(err)
 			}
+			fmt.Println("++++++++++++: 完成", i)
 		}
 
 		u = fmt.Sprintf("%s%s", href, tail)
@@ -121,7 +122,7 @@ func writeFile(filename, content string) error {
 	if err != nil {
 		return err
 	}
-	f.WriteString(content)
+	f.WriteString(fmt.Sprintf("%s\n", content))
 
 	return nil
 }
